@@ -27,5 +27,12 @@ class RestPasswordRouteSubscriber extends RouteSubscriberBase {
         $route->setRequirements($requirements);
       }
     }
+
+    // Need to alter user auth a bit.
+    if ($route = $collection->get('user.login.http')) {
+      $defaults = $route->getDefaults();
+      $defaults['_controller'] = '\Drupal\rest_password\Controller\UserAuthenticationTempPassController::login';
+      $route->setDefaults($defaults);
+    }
   }
 }

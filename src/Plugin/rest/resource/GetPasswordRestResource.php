@@ -109,10 +109,10 @@ class GetPasswordRestResource extends ResourceBase {
             $responce = t('This account is blocked or has not been activated yet.');
           }
           else {
-            // Mail one time login URL and instructions using current language.
-            $mail = _user_mail_notify('password_reset', $account, $lang);
+            // Mail a temp password.
+            $mail = _rest_password_user_mail_notify('password_reset_rest', $account, $lang);
             if (!empty($mail)) {
-              $this->logger->notice('Password reset instructions mailed to %email.', ['%email' => $account->getEmail()]);
+              $this->logger->notice('Password temp password instructions mailed to %email.', ['%email' => $account->getEmail()]);
               $responce = 'Further instructions have been sent to your email address.';
               $code = 200;
             }
