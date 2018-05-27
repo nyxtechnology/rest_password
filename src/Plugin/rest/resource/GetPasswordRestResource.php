@@ -91,7 +91,7 @@ class GetPasswordRestResource extends ResourceBase {
    *   Throws exception expected.
    */
   public function post(array $data) {
-    $responce = t('Please Post mail');
+    $responce = ['message' => 'Please Post mail key.'];
     $code = 400;
     if (!empty($data['mail'])) {
       $email = $data['mail'];
@@ -99,6 +99,7 @@ class GetPasswordRestResource extends ResourceBase {
       if (!empty($data['lang'])) {
         $lang = $data['lang'];
       }
+
       // Try to load by email.
       $users = $this->userStorage->loadByProperties(['mail' => $email]);
       if (!empty($users)) {
@@ -113,14 +114,18 @@ class GetPasswordRestResource extends ResourceBase {
             $mail = _rest_password_user_mail_notify('password_reset_rest', $account, $lang);
             if (!empty($mail)) {
               $this->logger->notice('Password temp password instructions mailed to %email.', ['%email' => $account->getEmail()]);
-              $responce = 'Further instructions have been sent to your email address.';
+              $responce = ['message' => 'Further instructions have been sent to your email address.'];
               $code = 200;
+            }
+            else {
+              $responce = ['message' => 'Sorry system can\'t send email at the moment'];
+              $code = '400';
             }
           }
         }
       }
       else {
-        $responce = t('This User was not found or invalid');
+        $responce = ['message' => 'This User was not found or invalid'];
       }
     }
 
