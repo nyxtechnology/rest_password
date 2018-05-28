@@ -28,6 +28,18 @@ class RestPasswordRouteSubscriber extends RouteSubscriberBase {
       }
     }
 
+    if ($route = $collection->get('rest.lost_password_reset.POST')) {
+      $requirements = $route->getRequirements();
+      if (!empty($requirements['_csrf_request_header_token'])) {
+        unset($requirements['_csrf_request_header_token']);
+        unset($requirements['_permission']);
+        $options = $route->getOptions();
+        unset($options['_auth']);
+        $route->setOptions($options);
+        $route->setRequirements($requirements);
+      }
+    }
+
     // Need to alter user auth a bit.
     if ($route = $collection->get('user.login.http')) {
       $defaults = $route->getDefaults();
