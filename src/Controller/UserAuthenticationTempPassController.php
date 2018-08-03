@@ -246,7 +246,7 @@ class UserAuthenticationTempPassController extends ControllerBase implements Con
             // Trim '/' off path to match \Drupal\Core\Access\CsrfAccessCheck.
             $logout_path = ltrim($logout_route->getPath(), '/');
             $response_data['logout_token'] = $this->csrfToken->get($logout_path);
-            $response_data['temp_pass'] = 'A Temp password has ben used please update your password';
+            $response_data['temp_pass'] = 'A Temp password has been used please update your password';
             $encoded_response_data = $this->serializer->encode($response_data, $format);
 
             // Delete temp pass as they have logged in ? as it will expire.
