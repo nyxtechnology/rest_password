@@ -123,6 +123,9 @@ class ResetPasswordFromTempRestResource extends ResourceBase {
                 // delete temp password.
                 $tempstore->deleteIfOwner('temp_pass');
               }
+              else {
+                $responce = ['message' => 'The recovery password is not valid.'];
+              }
             }
             else {
               $responce = ['message' => 'No valid temp password request.'];
