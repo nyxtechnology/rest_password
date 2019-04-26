@@ -119,26 +119,26 @@ class ResetPasswordFromTempRestResource extends ResourceBase {
                 $account->setPassword($new_pass);
                 $account->save();
                 $code = 200;
-                $responce = ['message' => 'Your New Password has been saved please log in.'];
+                $responce = ['message' => $this->t('Your New Password has been saved please log in.')];
                 // delete temp password.
                 $tempstore->deleteIfOwner('temp_pass');
               }
               else {
-                $responce = ['message' => 'The recovery password is not valid.'];
+                $responce = ['message' => $this->t('The recovery password is not valid.')];
               }
             }
             else {
-              $responce = ['message' => 'No valid temp password request.'];
+              $responce = ['message' => $this->t('No valid temp password request.')];
             }
           }
         }
       }
       else {
-        $responce = ['message' => 'This User was not found or invalid'];
+        $responce = ['message' => $this->t('This User was not found or invalid')];
       }
     }
     else {
-      $responce = ['message' => 'name, new_pass, and  temp_pass fields are required'];
+      $responce = ['message' => $this->t('name, new_pass, and  temp_pass fields are required')];
     }
 
     return new ResourceResponse($responce, $code);
