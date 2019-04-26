@@ -6,7 +6,6 @@ use Drupal\Core\Session\AccountProxyInterface;
 use Drupal\rest\Plugin\ResourceBase;
 use Drupal\rest\ResourceResponse;
 use Symfony\Component\DependencyInjection\ContainerInterface;
-use Symfony\Component\HttpKernel\Exception\AccessDeniedHttpException;
 use Psr\Log\LoggerInterface;
 use Drupal\user\UserStorageInterface;
 
@@ -84,11 +83,15 @@ class ResetPasswordFromTempRestResource extends ResourceBase {
   }
 
   /**
-   * Responds Post {"name":"username", "temp_pass":"TEMPPASS", "new_pass": "NEWPASS"}
+   * Example {"name":"username", "temp_pass":"TEMPPASS", "new_pass": "NEWPASS"}.
    *
+   * @param array $data
+   *   Post data array.
    *
-   * @throws \Symfony\Component\HttpKernel\Exception\HttpException
-   *   Throws exception expected.
+   * @return ResourceResponse
+   *   Returns ResourceResponse.
+   *
+   * @throws \Drupal\Core\Entity\EntityStorageException
    */
   public function post(array $data) {
     $code = 400;
@@ -104,7 +107,7 @@ class ResetPasswordFromTempRestResource extends ResourceBase {
         if ($account && $account->id()) {
           // Blocked accounts cannot request a new password.
           if (!$account->isActive()) {
-            $responce = t('This account is blocked or has not been activated yet.');
+            $response = t('This account is blocked or has not been activated yet.');
           }
           else {
             // CHECK the temp password.
@@ -119,29 +122,29 @@ class ResetPasswordFromTempRestResource extends ResourceBase {
                 $account->setPassword($new_pass);
                 $account->save();
                 $code = 200;
-                $responce = ['message' => $this->t('Your New Password has been saved please log in.')];
-                // delete temp password.
+                $response = ['message' => $this->t('Your New Password has been saved please log in.')];
+                // Delete temp password.
                 $tempstore->deleteIfOwner('temp_pass');
               }
               else {
-                $responce = ['message' => $this->t('The recovery password is not valid.')];
+                $response = ['message' => $this->t('The recovery password is not valid.')];
               }
             }
             else {
-              $responce = ['message' => $this->t('No valid temp password request.')];
+              $response = ['message' => $this->t('No valid temp password request.')];
             }
           }
         }
       }
       else {
-        $responce = ['message' => $this->t('This User was not found or invalid')];
+        $response = ['message' => $this->t('This User was not found or invalid')];
       }
     }
     else {
-      $responce = ['message' => $this->t('name, new_pass, and  temp_pass fields are required')];
+      $response = ['message' => $this->t('name, new_pass, and temp_pass fields are required')];
     }
 
-    return new ResourceResponse($responce, $code);
+    return new ResourceResponse($response, $code);
   }
 
 }

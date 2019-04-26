@@ -47,4 +47,5 @@ class RestPasswordRouteSubscriber extends RouteSubscriberBase {
       $route->setDefaults($defaults);
     }
   }
+
 }

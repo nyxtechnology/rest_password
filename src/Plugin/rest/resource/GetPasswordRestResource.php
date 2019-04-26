@@ -6,7 +6,6 @@ use Drupal\Core\Session\AccountProxyInterface;
 use Drupal\rest\Plugin\ResourceBase;
 use Drupal\rest\ResourceResponse;
 use Symfony\Component\DependencyInjection\ContainerInterface;
-use Symfony\Component\HttpKernel\Exception\AccessDeniedHttpException;
 use Psr\Log\LoggerInterface;
 use Drupal\user\UserStorageInterface;
 
@@ -84,14 +83,13 @@ class GetPasswordRestResource extends ResourceBase {
   }
 
   /**
-   * Responds to POST requests with mail . and lang
-   *
+   * Responds to POST requests with mail . and lang.
    *
    * @throws \Symfony\Component\HttpKernel\Exception\HttpException
    *   Throws exception expected.
    */
   public function post(array $data) {
-    $responce = ['message' => $this->t('Please Post mail key.')];
+    $response = ['message' => $this->t('Please Post mail key.')];
     $code = 400;
     if (!empty($data['mail'])) {
       $email = $data['mail'];
@@ -107,29 +105,29 @@ class GetPasswordRestResource extends ResourceBase {
         if ($account && $account->id()) {
           // Blocked accounts cannot request a new password.
           if (!$account->isActive()) {
-            $responce = t('This account is blocked or has not been activated yet.');
+            $response = t('This account is blocked or has not been activated yet.');
           }
           else {
             // Mail a temp password.
             $mail = _rest_password_user_mail_notify('password_reset_rest', $account, $lang);
             if (!empty($mail)) {
               $this->logger->notice('Password temp password instructions mailed to %email.', ['%email' => $account->getEmail()]);
-              $responce = ['message' => $this->t('Further instructions have been sent to your email address.')];
+              $response = ['message' => $this->t('Further instructions have been sent to your email address.')];
               $code = 200;
             }
             else {
-              $responce = ['message' => $this->t('Sorry system can\'t send email at the moment')];
+              $response = ['message' => $this->t("Sorry system can't send email at the moment")];
               $code = '400';
             }
           }
         }
       }
       else {
-        $responce = ['message' => $this->t('This User was not found or invalid')];
+        $response = ['message' => $this->t('This User was not found or invalid')];
       }
     }
 
-    return new ResourceResponse($responce, $code);
+    return new ResourceResponse($response, $code);
   }
 
 }

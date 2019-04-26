@@ -22,7 +22,7 @@ use Symfony\Component\Serializer\Serializer;
 /**
  * Provides controllers for login, login status and logout via HTTP requests.
  *
- * this is copy paste of UserAuthenticationController with one small change.
+ * This is copy paste of UserAuthenticationController with one small change.
  */
 class UserAuthenticationTempPassController extends ControllerBase implements ContainerInjectionInterface {
 
