@@ -117,7 +117,8 @@ class ResetPasswordFromTempRestResource extends ResourceBase {
             $tempstore = $service->get($collection, $uid);
             $temp_pass_from_storage = $tempstore->getIfOwner('temp_pass');
             if (!empty($temp_pass_from_storage)) {
-              if ($temp_pass_from_storage === $temp_pass) {
+              // Trying to be a a bit good. Issue #3036405.
+              if (hash_equals($temp_pass_from_storage,$temp_pass) === TRUE) {
                 // Cool.... lets change this password.
                 $account->setPassword($new_pass);
                 $account->save();

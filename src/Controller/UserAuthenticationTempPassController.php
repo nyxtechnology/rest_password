@@ -223,10 +223,9 @@ class UserAuthenticationTempPassController extends ControllerBase implements Con
         $temp_pass = $tempstore->getIfOwner('temp_pass');
         if (!empty($temp_pass)) {
           // Check that the dude supplied the right temp pass.
-          if ($credentials['pass'] === $temp_pass) {
+          if (hash_equals($credentials['pass'], $temp_pass) === TRUE) {
             // Yep we got a match.
             $this->flood->clear('user.http_login', $this->getLoginFloodIdentifier($request, $credentials['name']));
-
             $this->userLoginFinalize($user);
 
             // Send basic metadata about the logged in user.
