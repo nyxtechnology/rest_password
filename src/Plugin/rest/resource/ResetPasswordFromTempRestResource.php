@@ -100,8 +100,12 @@ class ResetPasswordFromTempRestResource extends ResourceBase {
       $temp_pass = $data['temp_pass'];
       $new_pass = $data['new_pass'];
 
-      // Try to load by email.
+      // Try to load by username.
       $users = $this->userStorage->loadByProperties(['name' => $name]);
+      // Try to load by email.
+      if (empty($users)) {
+        $users = $this->userStorage->loadByProperties(['mail' => $name]);
+      }
       if (!empty($users)) {
         $account = reset($users);
         if ($account && $account->id()) {
