@@ -78,7 +78,7 @@ class ResetPasswordFromTempRestResource extends ResourceBase {
       $container->getParameter('serializer.formats'),
       $container->get('logger.factory')->get('rest_password'),
       $container->get('current_user'),
-      $container->get('entity.manager')->getStorage('user')
+      $container->get('entity_type.manager')->getStorage('user')
     );
   }
 
